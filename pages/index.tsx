@@ -15,26 +15,32 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!pdfFile || !email) {
       alert('Please upload a file and enter an email.');
       return;
     }
+
+    setSending(true);
 
     const formData = new FormData();
     formData.append('file', pdfFile);
     formData.append('email', email);
 
     try {
-      setSending(true);
       const response = await axios.post('/api/send-signature', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(response.data);
-      window.location.href = '/success';
+
+      if (response.status === 200 || response.status === 307) {
+        window.location.href = '/success';
+      } else {
+        alert('Unexpected response from server');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error submitting form:', error);
       window.location.href = '/error';
     } finally {
       setSending(false);
