@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const form = formidable({ keepExtensions: true }); // ✅ No 'new'
 
-  form.parse(req, async (err, fields, files) => {
+  form.parse(req, async (err: any, fields: any, files: any) => {
     if (err) {
       console.error('Form parsing error:', err);
       return res.redirect('/error');
